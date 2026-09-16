@@ -1,6 +1,43 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <script>
+      (function() {
+        try {
+          if (typeof window !== 'undefined') {
+            var _nativeFetch = typeof window.fetch === 'function' ? window.fetch.bind(window) : null;
+            var _currentFetch = function() {
+              return _nativeFetch ? _nativeFetch.apply(window, arguments) : Promise.reject(new Error('fetch not available'));
+            };
+            Object.defineProperty(window, 'fetch', {
+              get: function() {
+                return _currentFetch;
+              },
+              set: function(fn) {
+                _currentFetch = fn;
+              },
+              configurable: true,
+              enumerable: true
+            });
+
+            if (typeof Window !== 'undefined' && Window.prototype) {
+              try {
+                Object.defineProperty(Window.prototype, 'fetch', {
+                  get: function() {
+                    return _currentFetch;
+                  },
+                  set: function(fn) {
+                    _currentFetch = fn;
+                  },
+                  configurable: true,
+                  enumerable: true
+                });
+              } catch (_) {}
+            }
+          }
+        } catch (_) {}
+      })();
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>The Small Business Legal Wiki – Free Compliance & Legal Resource Hub</title>

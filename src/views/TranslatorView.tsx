@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { AdSenseUnit } from '../components/AdSenseUnit';
 import { SchemaMarkup } from '../components/SchemaMarkup';
+import { useSeoMeta } from '../hooks/useSeoMeta';
 
 interface TranslationResult {
   directSummary: string;
@@ -43,6 +44,12 @@ export const TranslatorView: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<TranslationResult | null>(null);
   const [copied, setCopied] = useState(false);
+
+  // Dynamic SEO Meta
+  useSeoMeta({
+    title: 'Plain English Contract & Legalese Translator – Free AI Legal Analyzer | ComplyWiki',
+    description: 'Translate intimidating legal contracts into clear plain English, audit hidden traps, calculate fairness scores, and generate balanced redlines.',
+  });
 
   const handleTranslate = async (textToUse?: string) => {
     const text = textToUse || inputText;
@@ -96,6 +103,40 @@ export const TranslatorView: React.FC = () => {
         pageType="Document"
         title="Plain English Contract & Legalese Translator – The Small Business Legal Wiki"
         description="Free automated tool that translates confusing legal contracts into plain English, detects unfair clauses, and generates fair counter-proposals."
+        howTo={{
+          name: 'How to Translate and Redline Confusing Contract Legalese',
+          description: 'Step-by-step methodology to decipher dense legal agreements, identify asymmetric risks, evaluate clause fairness, and generate balanced redlines.',
+          totalTime: 'PT3M',
+          estimatedCost: { currency: 'USD', value: 0 },
+          steps: [
+            {
+              name: 'Paste Dense Contract Text or Select Sample',
+              text: 'Input the specific clause, terms of service paragraph, or indemnification language into the analyzer.',
+            },
+            {
+              name: 'Run Plain English Translation & Trap Audit',
+              text: 'The AI parses statutory terms into plain conversational English and highlights one-sided liability traps.',
+            },
+            {
+              name: 'Review Fairness Score & Risk Rating',
+              text: 'Evaluate the 1-10 fairness rating and examine detected hidden risks.',
+            },
+            {
+              name: 'Copy Recommended Redline Counter-Proposal',
+              text: 'Use the balanced replacement wording to negotiate fair, mutual contract terms with your counterparty.',
+            },
+          ],
+        }}
+        faqs={[
+          {
+            question: 'What is legalese translation?',
+            answer: 'Legalese translation converts dense, archaic, or complex legal provisions into clear, understandable plain English while preserving the underlying legal intent and risk allocation.',
+          },
+          {
+            question: 'Can I use the recommended redline directly in my contract negotiation?',
+            answer: 'Yes. The redline counter-proposals are crafted to establish mutual, commercially standard protections that counter-parties routinely accept.',
+          },
+        ]}
       />
 
       {/* Top Banner Ad */}

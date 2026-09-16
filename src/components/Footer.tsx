@@ -4,9 +4,10 @@ import { ViewType } from '../types';
 
 interface FooterProps {
   onNavigate: (view: ViewType) => void;
+  onOpenLegalModal: (initialTab: 'privacy' | 'terms' | 'cookies') => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
+export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenLegalModal }) => {
   return (
     <footer className="bg-slate-950 border-t border-slate-800 text-slate-400 text-sm mt-16 pt-12 pb-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -144,6 +145,26 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <span className="bg-slate-900 border border-slate-800 px-2 py-0.5 rounded">HTTPS 256-Bit</span>
               <span className="bg-slate-900 border border-slate-800 px-2 py-0.5 rounded">WCAG AA Compliant</span>
             </div>
+            <div className="pt-2 flex flex-col gap-1 text-xs">
+              <button
+                onClick={() => onOpenLegalModal('privacy')}
+                className="text-amber-400/90 hover:text-amber-300 transition-colors text-left flex items-center gap-1"
+              >
+                <span>→ Privacy Policy & AdSense Disclosures</span>
+              </button>
+              <button
+                onClick={() => onOpenLegalModal('terms')}
+                className="text-amber-400/90 hover:text-amber-300 transition-colors text-left flex items-center gap-1"
+              >
+                <span>→ Terms of Use & Legal Licensing</span>
+              </button>
+              <button
+                onClick={() => onOpenLegalModal('cookies')}
+                className="text-amber-400/90 hover:text-amber-300 transition-colors text-left flex items-center gap-1"
+              >
+                <span>→ Cookie Policy & Do Not Sell (CPRA)</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -152,10 +173,29 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           <div>
             © {new Date().getFullYear()} The Small Business Legal Wiki (ComplyWiki). All Rights Reserved.
           </div>
-          <div className="flex items-center gap-4 text-xs">
-            <button onClick={() => onNavigate('home')} className="hover:underline">Privacy Policy</button>
-            <button onClick={() => onNavigate('home')} className="hover:underline">Terms of Use</button>
-            <button onClick={() => onNavigate('architecture')} className="text-amber-400/90 hover:underline font-mono">
+          <div className="flex flex-wrap items-center gap-4 text-xs">
+            <button
+              onClick={() => onOpenLegalModal('privacy')}
+              className="hover:text-amber-300 hover:underline transition-colors"
+            >
+              Privacy Policy
+            </button>
+            <button
+              onClick={() => onOpenLegalModal('terms')}
+              className="hover:text-amber-300 hover:underline transition-colors"
+            >
+              Terms of Use
+            </button>
+            <button
+              onClick={() => onOpenLegalModal('cookies')}
+              className="hover:text-amber-300 hover:underline transition-colors"
+            >
+              Cookie Policy & CPRA
+            </button>
+            <button
+              onClick={() => onNavigate('architecture')}
+              className="text-amber-400/90 hover:underline font-mono"
+            >
               Next.js pSEO Architecture
             </button>
           </div>

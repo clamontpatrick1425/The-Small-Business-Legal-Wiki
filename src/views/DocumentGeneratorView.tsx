@@ -16,12 +16,22 @@ import confetti from 'canvas-confetti';
 import { DOCUMENT_TEMPLATES, ALL_STATES } from '../data/legalData';
 import { AdSenseUnit } from '../components/AdSenseUnit';
 import { SchemaMarkup } from '../components/SchemaMarkup';
+import { useSeoMeta } from '../hooks/useSeoMeta';
 
 export const DocumentGeneratorView: React.FC = () => {
   const [selectedTemplateId, setSelectedTemplateId] = useState(DOCUMENT_TEMPLATES[0].id);
   const [selectedStateCode, setSelectedStateCode] = useState('CA');
   const [step, setStep] = useState<1 | 2 | 3>(1); // 1: Form, 2: Interstitial Ad, 3: Generated Doc
   const [copied, setCopied] = useState(false);
+
+  const currentTemplate = DOCUMENT_TEMPLATES.find(t => t.id === selectedTemplateId) || DOCUMENT_TEMPLATES[0];
+  const currentState = ALL_STATES.find(s => s.code === selectedStateCode) || ALL_STATES[0];
+
+  // Dynamic SEO Meta updates for exact document & state pairing
+  useSeoMeta({
+    title: `Free ${currentTemplate.title} (${currentState.name} Compliant) – Generator | ComplyWiki`,
+    description: `Instantly create a customized, state-compliant ${currentTemplate.title} for ${currentState.name}. 100% free with zero paywall.`,
+  });
 
   // Form field state
   const [formData, setFormData] = useState({
@@ -34,9 +44,6 @@ export const DocumentGeneratorView: React.FC = () => {
     websiteUrl: 'https://example.com',
     contactEmail: 'privacy@example.com',
   });
-
-  const currentTemplate = DOCUMENT_TEMPLATES.find(t => t.id === selectedTemplateId) || DOCUMENT_TEMPLATES[0];
-  const currentState = ALL_STATES.find(s => s.code === selectedStateCode) || ALL_STATES[0];
 
   const handleFieldChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -100,6 +107,30 @@ export const DocumentGeneratorView: React.FC = () => {
         pageType="Document"
         title={`Free ${currentTemplate.title} (${currentState.name} Compliant) – Generator`}
         description={`Instantly create a customized, state-compliant ${currentTemplate.title} for ${currentState.name}. 100% free with zero paywall.`}
+        howTo={{
+          name: `How to Generate a ${currentState.name}-Compliant ${currentTemplate.title}`,
+          description: `Four-step process to draft, customize, review, and execute a legally binding ${currentTemplate.title} in ${currentState.name}.`,
+          totalTime: 'PT5M',
+          estimatedCost: { currency: 'USD', value: 0 },
+          steps: [
+            {
+              name: 'Select Governing State & Legal Template',
+              text: `Select ${currentState.name} to apply relevant local statutory disclosures and liability restrictions.`,
+            },
+            {
+              name: 'Enter Contracting Parties & Business Terms',
+              text: 'Input official legal entity names, effective dates, contract duration, and business purpose definitions.',
+            },
+            {
+              name: 'Review Statutory Clauses & Liability Caps',
+              text: 'Verify confidentiality terms, governing law jurisdiction, and mutual remedies.',
+            },
+            {
+              name: 'Export, Download, and Execute',
+              text: 'Copy the finalized document to your clipboard or download as plain text (.txt) for e-signature or paper execution.',
+            },
+          ],
+        }}
         faqs={[
           {
             question: `Is this ${currentTemplate.title} legally binding in ${currentState.name}?`,

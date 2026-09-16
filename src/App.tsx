@@ -11,7 +11,10 @@ import { LocalHubView } from './views/LocalHubView';
 import { ArchitectureView } from './views/ArchitectureView';
 import { AiConcierge } from './components/AiConcierge';
 import { AiVoiceAgentModal } from './components/AiVoiceAgentModal';
+import { LegalPoliciesModal, LegalModalTab } from './components/LegalPoliciesModal';
 import { AdSenseUnit } from './components/AdSenseUnit';
+import { ReadingProgressBar } from './components/ReadingProgressBar';
+import { useSeoMeta } from './hooks/useSeoMeta';
 import { ALL_STATES } from './data/legalData';
 
 export default function App() {
@@ -20,6 +23,16 @@ export default function App() {
   const [selectedState, setSelectedState] = useState<LegalStateInfo>(ALL_STATES[0]);
   const [isConciergeOpen, setIsConciergeOpen] = useState(false);
   const [isVoiceAgentOpen, setIsVoiceAgentOpen] = useState(false);
+  const [isLegalModalOpen, setIsLegalModalOpen] = useState(false);
+  const [legalModalTab, setLegalModalTab] = useState<LegalModalTab>('privacy');
+
+  // Dynamically update document title, description, OG, and Twitter tags based on view
+  useSeoMeta({}, currentView);
+
+  const handleOpenLegalModal = (tab: LegalModalTab) => {
+    setLegalModalTab(tab);
+    setIsLegalModalOpen(true);
+  };
 
   const handleNavigate = (view: ViewType) => {
     setCurrentView(view);
@@ -43,6 +56,9 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-amber-500/30 selection:text-amber-200">
+      {/* Scroll-based Reading Progress Bar for dwell time and SEO engagement */}
+      <ReadingProgressBar estimatedReadingMinutes={6} showBadge={true} />
+
       {/* Navigation Header */}
       <Navbar
         currentView={currentView}
@@ -90,7 +106,10 @@ export default function App() {
       <AdSenseUnit format="anchor" slotId="mobile-anchor-footer" />
 
       {/* Footer */}
-      <Footer onNavigate={handleNavigate} />
+      <Footer
+        onNavigate={handleNavigate}
+        onOpenLegalModal={handleOpenLegalModal}
+      />
 
       {/* Floating AI Concierge Chatbot */}
       <AiConcierge
@@ -102,6 +121,13 @@ export default function App() {
       <AiVoiceAgentModal
         isOpen={isVoiceAgentOpen}
         onClose={() => setIsVoiceAgentOpen(false)}
+      />
+
+      {/* Comprehensive Legal Policies & Terms Modal */}
+      <LegalPoliciesModal
+        isOpen={isLegalModalOpen}
+        initialTab={legalModalTab}
+        onClose={() => setIsLegalModalOpen(false)}
       />
     </div>
   );

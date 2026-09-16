@@ -14,6 +14,7 @@ import {
 import confetti from 'canvas-confetti';
 import { AdSenseUnit } from '../components/AdSenseUnit';
 import { SchemaMarkup } from '../components/SchemaMarkup';
+import { useSeoMeta } from '../hooks/useSeoMeta';
 
 interface Question {
   id: string;
@@ -166,6 +167,12 @@ export const ChecklistView: React.FC = () => {
   const [currentIdx, setCurrentIdx] = useState(0);
   const [completed, setCompleted] = useState(false);
 
+  // Dynamic SEO Meta
+  useSeoMeta({
+    title: 'Small Business Compliance Audit & Statutory Readiness Checklist (2026) | ComplyWiki',
+    description: 'Interactive corporate compliance score audit covering state annual reports, worker classification, registered agent rules, and municipal licensing.',
+  });
+
   const currentQ = AUDIT_QUESTIONS[currentIdx];
   const totalQuestions = AUDIT_QUESTIONS.length;
 
@@ -208,6 +215,44 @@ export const ChecklistView: React.FC = () => {
         pageType="Checklist"
         title="Free Small Business Legal Compliance Audit & Risk Assessment"
         description="Interactive 5-point statutory checklist assessing website privacy policies, FinCEN BOI reporting, 1099 contractor agreements, and corporate good standing."
+        howTo={{
+          name: 'How to Perform an Annual Small Business Statutory Compliance Audit',
+          description: 'A 5-point audit workflow to identify corporate governance liabilities, worker misclassification, and state disclosure penalties.',
+          totalTime: 'PT15M',
+          estimatedCost: { currency: 'USD', value: 0 },
+          steps: [
+            {
+              name: 'Verify State Entity Good Standing & Annual Report Filings',
+              text: 'Confirm that your LLC or Corporation is in active good standing with your Secretary of State and that franchise taxes/annual reports are current.',
+            },
+            {
+              name: 'Audit Website Privacy Policies & Cookie Consent Banners',
+              text: 'Ensure disclosures comply with CPRA, VCDPA, and state consumer privacy frameworks with opt-out mechanisms.',
+            },
+            {
+              name: 'Audit Independent Contractor & 1099 Work Agreements',
+              text: 'Ensure written contractor agreements exist with explicit IP Work-Made-For-Hire assignments and IRS 20-factor compliance.',
+            },
+            {
+              name: 'Check Corporate Transparency Act (FinCEN BOI) Filings',
+              text: 'Confirm that beneficial ownership information has been reported to the US Department of the Treasury.',
+            },
+            {
+              name: 'Review Municipal Business Licensing & Assumed Names',
+              text: 'Verify city tax certificates and county clerk DBA certificates in your physical operating jurisdictions.',
+            },
+          ],
+        }}
+        faqs={[
+          {
+            question: 'How often should a small business conduct a compliance audit?',
+            answer: 'Businesses should conduct a compliance audit annually before state franchise tax and annual report filing deadlines, or immediately upon hiring contractors.',
+          },
+          {
+            question: 'What happens if my business fails an annual report filing?',
+            answer: 'Failing to file an annual report results in administrative dissolution or forfeiture of good standing, stripping the entity of limited liability protection.',
+          },
+        ]}
       />
 
       {/* Top Banner Ad */}

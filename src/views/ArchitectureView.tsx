@@ -99,6 +99,39 @@ export const ArchitectureView: React.FC = () => {
         pageType="Architecture"
         title="Next.js Programmatic SEO & AdSense Monetization Architecture – The Small Business Legal Wiki"
         description="Comprehensive technical blueprint: Next.js 14+ app router, PostgreSQL DDL schema, MDX content templates, and Share of Model (SoM) testing."
+        howTo={{
+          name: 'How to Implement a High-RPM Programmatic SEO & GEO Publishing Architecture',
+          description: 'Technical engineering steps to deploy 5,000+ programmatic legal pages with sub-1.5s Core Web Vitals and rich JSON-LD schema.',
+          totalTime: 'PT45M',
+          steps: [
+            {
+              name: 'Establish PostgreSQL Matrix Database Schema',
+              text: 'Model states, legal document templates, municipal jurisdictions, and statutory clauses in normalized SQL tables.',
+            },
+            {
+              name: 'Configure Next.js Dynamic Static Generation',
+              text: 'Pre-render state and clause combinations via generateStaticParams with ISR caching.',
+            },
+            {
+              name: 'Integrate Zero-CLS AdSense Publisher Slots',
+              text: 'Embed leaderboards, native in-feed units, and anchor slots with strict CSS min-height reservations.',
+            },
+            {
+              name: 'Inject Dynamic JSON-LD Schema into Document Head',
+              text: 'Generate interlinked @graph nodes for Article, FAQPage, HowTo, and LegalService.',
+            },
+          ],
+        }}
+        faqs={[
+          {
+            question: 'What is Programmatic SEO (pSEO) in legal publishing?',
+            answer: 'Programmatic SEO generates thousands of search-optimized landing pages by combining structured database records (e.g. 50 states x 10 legal templates) with dynamic content templates.',
+          },
+          {
+            question: 'How do you prevent Cumulative Layout Shift (CLS) with AdSense?',
+            answer: 'Always wrap ad units in container elements with CSS min-height properties matching the exact standard ad unit dimensions before the ad script executes.',
+          },
+        ]}
       />
 
       {/* Top Banner Ad */}

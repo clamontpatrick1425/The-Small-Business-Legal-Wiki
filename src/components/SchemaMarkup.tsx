@@ -1,129 +1,68 @@
 import React, { useEffect, useState } from 'react';
-import { Code2, Check, Copy, ExternalLink, X } from 'lucide-react';
+import { Code2, Check, Copy, ExternalLink, X, FileCheck2, HelpCircle, ListOrdered } from 'lucide-react';
+import { 
+  buildSchemaGraph, 
+  injectJsonLd, 
+  FaqItem, 
+  HowToData, 
+  LocalBusinessData, 
+  BreadcrumbItem, 
+  ArticleData 
+} from '../services/schemaService';
 
 interface SchemaMarkupProps {
   pageType: 'Home' | 'Document' | 'Clause' | 'LocalHub' | 'Checklist' | 'Architecture';
   title: string;
   description: string;
   url?: string;
-  faqs?: Array<{ question: string; answer: string }>;
-  localBusinessData?: {
-    name: string;
-    city: string;
-    state: string;
-    phone: string;
-    address: string;
-  };
+  faqs?: FaqItem[];
+  howTo?: HowToData;
+  breadcrumbs?: BreadcrumbItem[];
+  localBusinessData?: LocalBusinessData;
+  articleData?: Partial<ArticleData>;
 }
 
 export const SchemaMarkup: React.FC<SchemaMarkupProps> = ({
   pageType,
   title,
   description,
-  url = typeof window !== 'undefined' ? window.location.href : 'https://complywiki.com',
+  url,
   faqs = [],
+  howTo,
+  breadcrumbs,
   localBusinessData,
+  articleData,
 }) => {
   const [showInspector, setShowInspector] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  // Generate interlinked Schema.org @graph
-  const schemaGraph: any = {
-    '@context': 'https://schema.org',
-    '@graph': [
-      {
-        '@type': 'LegalService',
-        '@id': 'https://complywiki.com/#organization',
-        name: 'The Small Business Legal Wiki',
-        alternateName: 'ComplyWiki',
-        url: 'https://complywiki.com',
-        logo: {
-          '@type': 'ImageObject',
-          '@id': 'https://complywiki.com/#logo',
-          url: 'https://complywiki.com/assets/logo.png',
-        },
-        image: { '@id': 'https://complywiki.com/#logo' },
-        description: 'Comprehensive free business compliance resource hub and programmatic legal library.',
-        priceRange: '$0 (100% Free Public Resource)',
-        areaServed: 'US',
-        sameAs: [
-          'https://twitter.com/complywiki',
-          'https://linkedin.com/company/complywiki',
-          'https://github.com/complywiki/open-legal-templates',
-        ],
-      },
-      {
-        '@type': 'WebSite',
-        '@id': 'https://complywiki.com/#website',
-        url: 'https://complywiki.com',
-        name: 'The Small Business Legal Wiki',
-        publisher: { '@id': 'https://complywiki.com/#organization' },
-      },
-      {
-        '@type': 'Article',
-        '@id': `${url}#article`,
-        isPartOf: { '@id': 'https://complywiki.com/#website' },
-        headline: title,
-        description: description,
-        inLanguage: 'en-US',
-        mainEntityOfPage: url,
-        datePublished: '2026-01-01T00:00:00Z',
-        dateModified: new Date().toISOString(),
-        publisher: { '@id': 'https://complywiki.com/#organization' },
-        author: {
-          '@type': 'Organization',
-          name: 'The Small Business Legal Wiki Editorial Board',
-        },
-      },
-    ],
+  // Construct complete Article node metadata
+  const fullArticle: ArticleData = {
+    headline: title,
+    description: description,
+    url: url,
+    articleSection: pageType,
+    authorName: 'The Small Business Legal Wiki Editorial Board',
+    datePublished: '2026-01-01T00:00:00Z',
+    dateModified: new Date().toISOString(),
+    ...articleData,
   };
 
-  // Add FAQPage node if FAQs exist
-  if (faqs && faqs.length > 0) {
-    schemaGraph['@graph'].push({
-      '@type': 'FAQPage',
-      '@id': `${url}#faq`,
-      mainEntity: faqs.map(f => ({
-        '@type': 'Question',
-        name: f.question,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: f.answer,
-        },
-      })),
-    });
-  }
-
-  // Add LocalBusiness node if viewing a local metro hub
-  if (localBusinessData) {
-    schemaGraph['@graph'].push({
-      '@type': 'ProfessionalService',
-      '@id': `${url}#localOffice`,
-      name: `${localBusinessData.city} Small Business Compliance Center`,
-      telephone: localBusinessData.phone,
-      address: {
-        '@type': 'PostalAddress',
-        streetAddress: localBusinessData.address,
-        addressLocality: localBusinessData.city,
-        addressRegion: localBusinessData.state,
-        addressCountry: 'US',
-      },
-      provider: { '@id': 'https://complywiki.com/#organization' },
-    });
-  }
+  // Build the complete Schema.org @graph using the unified Schema Service
+  const schemaGraph = buildSchemaGraph({
+    url,
+    article: fullArticle,
+    faqs,
+    howTo,
+    breadcrumbs,
+    localBusiness: localBusinessData,
+  });
 
   const jsonString = JSON.stringify(schemaGraph, null, 2);
 
-  // Inject or update in DOM
+  // Dynamically inject into document.head
   useEffect(() => {
-    let scriptTag = document.getElementById('complywiki-schema-jsonld') as HTMLScriptElement;
-    if (!scriptTag) {
-      scriptTag = document.createElement('script');
-      scriptTag.id = 'complywiki-schema-jsonld';
-      scriptTag.type = 'application/ld+json';
-      document.head.appendChild(scriptTag);
-    }
-    scriptTag.text = jsonString;
+    injectJsonLd(schemaGraph, 'complywiki-schema-jsonld');
   }, [jsonString]);
 
   const copyToClipboard = () => {
@@ -132,13 +71,24 @@ export const SchemaMarkup: React.FC<SchemaMarkupProps> = ({
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const detectedTypes = schemaGraph['@graph']?.map((node: any) => node['@type']) || [];
+
   return (
     <>
-      <div className="flex items-center justify-end my-2">
+      <div className="flex items-center justify-between my-2 text-xs">
+        <div className="hidden sm:flex items-center gap-2 text-slate-400 font-mono text-[11px]">
+          <span className="text-emerald-400 font-bold">● Active JSON-LD Head Injection:</span>
+          {detectedTypes.map((type: string, i: number) => (
+            <span key={i} className="px-1.5 py-0.5 bg-slate-900 border border-slate-800 rounded text-slate-300">
+              {type}
+            </span>
+          ))}
+        </div>
+
         <button
           onClick={() => setShowInspector(true)}
-          className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-mono font-medium text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 rounded-md transition-all shadow-sm"
-          title="Inspect live Schema.org JSON-LD graph for this page"
+          className="ml-auto inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-mono font-medium text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 rounded-md transition-all shadow-sm active:scale-98"
+          title="Inspect live Schema.org JSON-LD graph injected into document.head"
         >
           <Code2 className="w-3.5 h-3.5" />
           <span>Inspect Live JSON-LD Schema</span>
@@ -153,18 +103,36 @@ export const SchemaMarkup: React.FC<SchemaMarkupProps> = ({
                 <Code2 className="w-5 h-5 text-amber-400" />
                 <div>
                   <h3 className="text-sm font-bold text-slate-100">Live Schema.org JSON-LD Inspector</h3>
-                  <p className="text-[11px] text-slate-400">Validated for Google Rich Results, FAQPage, & SGE citations</p>
+                  <p className="text-[11px] text-slate-400">
+                    Dynamically generated and injected into document.head for rich search snippets
+                  </p>
                 </div>
               </div>
               <button
                 onClick={() => setShowInspector(false)}
-                className="p-1 text-slate-400 hover:text-slate-200"
+                className="p-1 text-slate-400 hover:text-slate-200 rounded hover:bg-slate-800"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="my-3 overflow-y-auto bg-slate-950 p-3 rounded-lg border border-slate-800 font-mono text-xs text-amber-200/90 leading-relaxed">
+            {/* Quick Schema badges */}
+            <div className="flex flex-wrap items-center gap-1.5 pt-3">
+              <span className="text-[11px] text-slate-400 mr-1">Injected Nodes:</span>
+              {detectedTypes.map((type: string, i: number) => (
+                <span
+                  key={i}
+                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/15 text-amber-300 border border-amber-500/30"
+                >
+                  {type === 'FAQPage' && <HelpCircle className="w-3 h-3 text-cyan-400" />}
+                  {type === 'HowTo' && <ListOrdered className="w-3 h-3 text-emerald-400" />}
+                  {type === 'Article' && <FileCheck2 className="w-3 h-3 text-purple-400" />}
+                  <span>{type}</span>
+                </span>
+              ))}
+            </div>
+
+            <div className="my-3 overflow-y-auto bg-slate-950 p-3 rounded-lg border border-slate-800 font-mono text-xs text-amber-200/90 leading-relaxed max-h-[50vh]">
               <pre>{jsonString}</pre>
             </div>
 

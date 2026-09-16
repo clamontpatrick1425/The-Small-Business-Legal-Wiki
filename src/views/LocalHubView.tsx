@@ -15,11 +15,18 @@ import {
 import { LOCAL_METRO_HUBS } from '../data/legalData';
 import { AdSenseUnit } from '../components/AdSenseUnit';
 import { SchemaMarkup } from '../components/SchemaMarkup';
+import { useSeoMeta } from '../hooks/useSeoMeta';
 
 export const LocalHubView: React.FC = () => {
   const [selectedHubId, setSelectedHubId] = useState(LOCAL_METRO_HUBS[0].id);
 
   const currentHub = LOCAL_METRO_HUBS.find(h => h.id === selectedHubId) || LOCAL_METRO_HUBS[0];
+
+  // Dynamic SEO Meta per City Hub
+  useSeoMeta({
+    title: `${currentHub.city}, ${currentHub.stateCode} Small Business Permits & Licensing Hub | ComplyWiki`,
+    description: `Official directory of ${currentHub.city} municipal business licenses, city hall addresses, zoning permits, and county clerk filings.`,
+  });
 
   return (
     <div className="space-y-8">
@@ -28,6 +35,40 @@ export const LocalHubView: React.FC = () => {
         pageType="LocalHub"
         title={`${currentHub.city} Small Business Permits & Municipal Compliance Hub`}
         description={`Official directory of ${currentHub.city} business licenses, city hall addresses, and county clerk filings.`}
+        howTo={{
+          name: `How to Obtain Municipal Business Licenses in ${currentHub.city}, ${currentHub.stateCode}`,
+          description: `Guide to register local business tax, zoning clearance, and county DBA filings in ${currentHub.city}.`,
+          totalTime: 'PT30M',
+          estimatedCost: { currency: 'USD', value: '50' },
+          steps: [
+            {
+              name: 'File County Assumed Business Name (DBA)',
+              text: `Visit ${currentHub.countyClerk.name} at ${currentHub.countyClerk.address} if operating under an assumed trade name.`,
+            },
+            {
+              name: 'Register for Municipal Business Tax Certificate',
+              text: `Apply with ${currentHub.localCityHall.name} (${currentHub.localCityHall.phone}) for local commercial tax registration.`,
+            },
+            {
+              name: 'Verify Local Zoning & Fire Department Occupancy',
+              text: 'Obtain certificates of occupancy and municipal code clearances before commercial operations start.',
+            },
+            {
+              name: 'Connect with Local Small Business Development Center (SBDC)',
+              text: `Consult with ${currentHub.sbdcOffice.name} at ${currentHub.sbdcOffice.address} for free municipal permit assistance.`,
+            },
+          ],
+        }}
+        faqs={[
+          {
+            question: `Do I need a city permit if I already registered an LLC in ${currentHub.stateCode}?`,
+            answer: `Yes. State LLC formation does not replace municipal business tax registration or local police/fire zoning permits in ${currentHub.city}.`,
+          },
+          {
+            question: `Where is the main licensing office in ${currentHub.city}?`,
+            answer: `${currentHub.localCityHall.name} is located at ${currentHub.localCityHall.address} (Phone: ${currentHub.localCityHall.phone}).`,
+          },
+        ]}
         localBusinessData={{
           name: `${currentHub.city} Municipal Business Center`,
           city: currentHub.city,

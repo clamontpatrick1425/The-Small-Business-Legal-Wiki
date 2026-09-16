@@ -2,5 +2,7 @@
   "name": "The Small Business Legal Wiki",
   "description": "The ultimate free business compliance resource hub and programmatic legal library featuring document generators, clause explanations, local compliance guides, and AI compliance concierge.",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }

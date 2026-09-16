@@ -17,6 +17,7 @@ import { LEGAL_CLAUSES } from '../data/legalData';
 import { LegalClause } from '../types';
 import { AdSenseUnit } from '../components/AdSenseUnit';
 import { SchemaMarkup } from '../components/SchemaMarkup';
+import { useSeoMeta } from '../hooks/useSeoMeta';
 
 interface ClauseLibraryViewProps {
   initialClauseId?: string | null;
@@ -40,6 +41,17 @@ export const ClauseLibraryView: React.FC<ClauseLibraryViewProps> = ({ initialCla
 
   const currentClause = LEGAL_CLAUSES.find(c => c.id === selectedClauseId) || null;
 
+  // Dynamic SEO Meta updates based on whether a specific clause is viewed or directory is viewed
+  useSeoMeta({
+    title: currentClause
+      ? `${currentClause.title} Clause: Plain English Translation & Legal Risk Analysis | ComplyWiki`
+      : 'Contract Clause Library: Plain English Legal Explanations & Risk Audits | ComplyWiki',
+    description: currentClause
+      ? currentClause.shortAnswer
+      : 'Deconstruct high-risk clauses including indemnification, non-competes, and liability caps with plain-English translations, gotchas, and redline templates.',
+    ogType: currentClause ? 'article' : 'website',
+  });
+
   const copyClauseText = (text: string) => {
     navigator.clipboard.writeText(text);
     setCopied(true);
@@ -55,6 +67,30 @@ export const ClauseLibraryView: React.FC<ClauseLibraryViewProps> = ({ initialCla
           pageType="Clause"
           title={`${currentClause.title} Clause: Plain English Translation & Legal Risk Analysis`}
           description={currentClause.shortAnswer}
+          howTo={{
+            name: `How to Audit and Redline a ${currentClause.title} Clause`,
+            description: `A 4-step negotiation framework to identify asymmetric risk and propose mutual counter-language for ${currentClause.title.toLowerCase()} provisions.`,
+            totalTime: 'PT10M',
+            estimatedCost: { currency: 'USD', value: 0 },
+            steps: [
+              {
+                name: 'Examine Statutory Standard vs Asymmetric Language',
+                text: `Identify whether the clause requires unilateral compliance or mutual protection under ${currentClause.officialGovSource.statute}.`,
+              },
+              {
+                name: 'Audit Hidden Gotchas & Uncapped Liability',
+                text: `Check for: ${currentClause.commonGotchas.slice(0, 2).join('; ')}.`,
+              },
+              {
+                name: 'Evaluate Risk Level',
+                text: `This clause currently carries a ${currentClause.riskLevel} risk rating in commercial small business contracts.`,
+              },
+              {
+                name: 'Insert Balanced Redline Counter-Proposal',
+                text: 'Replace one-sided covenants with commercially acceptable mutual terms.',
+              },
+            ],
+          }}
           faqs={currentClause.faqs.map(f => ({ question: f.question, answer: f.answer }))}
         />
 
