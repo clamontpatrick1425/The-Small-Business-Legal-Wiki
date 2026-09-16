@@ -25,7 +25,7 @@ import { SchemaMarkup } from '../components/SchemaMarkup';
 
 interface HomeViewProps {
   onNavigate: (view: ViewType) => void;
-  onSelectClause: (clauseId: string) => void;
+  onSelectClause: (clauseId: string, slug: string) => void;
   onSelectState: (state: LegalStateInfo) => void;
 }
 
@@ -63,7 +63,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
           },
           {
             question: "What is the Corporate Transparency Act (BOI) requirement in 2026?",
-            answer: "All non-exempt domestic corporations and LLCs must report their Beneficial Owners (25%+ equity or substantial control) to FinCEN. Newly registered entities have 30 calendar days to file at FinCEN.gov/boi."
+            answer: "As of August 2026, it no longer applies to U.S. companies. FinCEN permanently exempted all domestic corporations, LLCs, and their beneficial owners from BOI reporting. Only foreign entities registered to do business in the U.S. still have to file, within 30 calendar days of their registration taking effect."
           }
         ]}
       />
@@ -340,7 +340,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
           {filteredClauses.slice(0, 6).map((clause) => (
             <div
               key={clause.id}
-              onClick={() => onSelectClause(clause.id)}
+              onClick={() => onSelectClause(clause.id, clause.slug)}
               className="p-4 rounded-xl bg-slate-900 border border-slate-800 hover:border-amber-500/40 transition-all cursor-pointer group shadow-sm flex flex-col justify-between"
             >
               <div className="space-y-2">

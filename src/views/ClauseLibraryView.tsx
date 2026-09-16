@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { 
   BookOpen, 
   Search, 
@@ -19,12 +20,10 @@ import { AdSenseUnit } from '../components/AdSenseUnit';
 import { SchemaMarkup } from '../components/SchemaMarkup';
 import { useSeoMeta } from '../hooks/useSeoMeta';
 
-interface ClauseLibraryViewProps {
-  initialClauseId?: string | null;
-}
-
-export const ClauseLibraryView: React.FC<ClauseLibraryViewProps> = ({ initialClauseId }) => {
-  const [selectedClauseId, setSelectedClauseId] = useState<string | null>(initialClauseId || null);
+export const ClauseLibraryView: React.FC = () => {
+  const { slug } = useParams();
+  const navigate = useNavigate();
+  const [selectedClauseId, setSelectedClauseId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [copied, setCopied] = useState(false);
@@ -39,7 +38,9 @@ export const ClauseLibraryView: React.FC<ClauseLibraryViewProps> = ({ initialCla
     return matchesSearch && matchesCategory;
   });
 
-  const currentClause = LEGAL_CLAUSES.find(c => c.id === selectedClauseId) || null;
+  const currentClause = slug
+    ? LEGAL_CLAUSES.find(c => c.slug === slug) ?? null
+    : LEGAL_CLAUSES.find(c => c.id === selectedClauseId) ?? null;
 
   // Dynamic SEO Meta updates based on whether a specific clause is viewed or directory is viewed
   useSeoMeta({
@@ -99,7 +100,10 @@ export const ClauseLibraryView: React.FC<ClauseLibraryViewProps> = ({ initialCla
 
         {/* Back navigation */}
         <button
-          onClick={() => setSelectedClauseId(null)}
+          onClick={() => {
+            setSelectedClauseId(null);
+            navigate('/clauses');
+          }}
           className="inline-flex items-center gap-2 text-xs font-semibold text-amber-400 hover:text-amber-300 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
@@ -316,7 +320,10 @@ export const ClauseLibraryView: React.FC<ClauseLibraryViewProps> = ({ initialCla
         {filteredClauses.map((clause) => (
           <div
             key={clause.id}
-            onClick={() => setSelectedClauseId(clause.id)}
+            onClick={() => {
+              navigate(`/clauses/${clause.slug}`);
+              setSelectedClauseId(clause.id);
+            }}
             className="p-5 rounded-2xl bg-slate-900 border border-slate-800 hover:border-amber-500/40 hover:bg-slate-850 transition-all cursor-pointer group shadow-md flex flex-col justify-between"
           >
             <div className="space-y-3">

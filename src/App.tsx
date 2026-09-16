@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { ViewType, LegalStateInfo } from './types';
+import { ROUTE_FOR_VIEW, viewForPath } from './routes';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { HomeView } from './views/HomeView';
@@ -17,17 +19,18 @@ import { ReadingProgressBar } from './components/ReadingProgressBar';
 import { useSeoMeta } from './hooks/useSeoMeta';
 import { ALL_STATES } from './data/legalData';
 
-export default function App() {
-  const [currentView, setCurrentView] = useState<ViewType>('home');
-  const [selectedClauseId, setSelectedClauseId] = useState<string | null>(null);
+function AppShell() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const currentView = viewForPath(location.pathname);
+
   const [selectedState, setSelectedState] = useState<LegalStateInfo>(ALL_STATES[0]);
   const [isConciergeOpen, setIsConciergeOpen] = useState(false);
   const [isVoiceAgentOpen, setIsVoiceAgentOpen] = useState(false);
   const [isLegalModalOpen, setIsLegalModalOpen] = useState(false);
   const [legalModalTab, setLegalModalTab] = useState<LegalModalTab>('privacy');
 
-  // Dynamically update document title, description, OG, and Twitter tags based on view
-  useSeoMeta({}, currentView);
+  useSeoMeta();
 
   const handleOpenLegalModal = (tab: LegalModalTab) => {
     setLegalModalTab(tab);
@@ -35,22 +38,18 @@ export default function App() {
   };
 
   const handleNavigate = (view: ViewType) => {
-    setCurrentView(view);
-    if (view !== 'clause-detail') {
-      setSelectedClauseId(null);
-    }
+    navigate(view === 'clause-detail' ? '/clauses' : ROUTE_FOR_VIEW[view]);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleSelectClause = (clauseId: string) => {
-    setSelectedClauseId(clauseId);
-    setCurrentView('clauses');
+  const handleSelectClause = (_clauseId: string, slug: string) => {
+    navigate(`/clauses/${slug}`);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleSelectState = (state: LegalStateInfo) => {
     setSelectedState(state);
-    setCurrentView('generator');
+    navigate('/generator');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -69,37 +68,25 @@ export default function App() {
 
       {/* Main Content Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-16">
-        {currentView === 'home' && (
-          <HomeView
-            onNavigate={handleNavigate}
-            onSelectClause={handleSelectClause}
-            onSelectState={handleSelectState}
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <HomeView
+                onNavigate={handleNavigate}
+                onSelectClause={handleSelectClause}
+                onSelectState={handleSelectState}
+              />
+            }
           />
-        )}
-
-        {currentView === 'generator' && (
-          <DocumentGeneratorView />
-        )}
-
-        {currentView === 'clauses' && (
-          <ClauseLibraryView initialClauseId={selectedClauseId} />
-        )}
-
-        {currentView === 'checklists' && (
-          <ChecklistView />
-        )}
-
-        {currentView === 'translator' && (
-          <TranslatorView />
-        )}
-
-        {currentView === 'local-hubs' && (
-          <LocalHubView />
-        )}
-
-        {currentView === 'architecture' && (
-          <ArchitectureView />
-        )}
+          <Route path="/generator" element={<DocumentGeneratorView initialState={selectedState} />} />
+          <Route path="/clauses" element={<ClauseLibraryView />} />
+          <Route path="/clauses/:slug" element={<ClauseLibraryView />} />
+          <Route path="/checklists" element={<ChecklistView />} />
+          <Route path="/translator" element={<TranslatorView />} />
+          <Route path="/local-hubs" element={<LocalHubView />} />
+          <Route path="/architecture" element={<ArchitectureView />} />
+        </Routes>
       </main>
 
       {/* Mobile Sticky Bottom Anchor Ad */}
@@ -132,3 +119,12 @@ export default function App() {
     </div>
   );
 }
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AppShell />
+    </BrowserRouter>
+  );
+}
+

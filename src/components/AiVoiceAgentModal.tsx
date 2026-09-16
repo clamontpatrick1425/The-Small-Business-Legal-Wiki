@@ -206,15 +206,15 @@ export const AiVoiceAgentModal: React.FC<AiVoiceAgentModalProps> = ({ isOpen, on
               <button
                 onClick={() =>
                   triggerIntent(
-                    'boi_reporting',
-                    '"What is the deadline for filing FinCEN BOI?"',
-                    'Under the federal Corporate Transparency Act, reporting companies formed before 2024 had until January 1st, 2025 to file. Newly formed entities created in 2024 have ninety calendar days, while those registered in 2025 and beyond have thirty calendar days. Failure to report exposes officers to civil fines up to 591 dollars per day. Would you like our free direct filing link?'
+                    'boi_status',
+                    '"Do I still need to file a FinCEN BOI report?"',
+                    'As of August 2026, no. FinCEN permanently exempted every U.S.-formed company from Beneficial Ownership Information reporting. Only foreign entities registered to do business in the U.S. still have a filing obligation, due thirty calendar days after their registration takes effect. Would you like me to confirm whether your entity counts as domestic or foreign?'
                   )
                 }
                 className="text-left p-2.5 rounded-lg bg-slate-800/80 hover:bg-slate-750 border border-slate-700 hover:border-amber-500/40 text-xs text-slate-200 transition-all"
               >
-                <div className="font-semibold text-amber-300">2. FinCEN BOI Deadline</div>
-                <div className="text-[11px] text-slate-400 truncate">"What is the federal BOI deadline?"</div>
+                <div className="font-semibold text-amber-300">2. FinCEN BOI Status</div>
+                <div className="text-[11px] text-slate-400 truncate">"Do I still need to file a BOI report?"</div>
               </button>
 
               <button

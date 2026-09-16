@@ -116,10 +116,10 @@ ${context ? `Context: ${context}` : ""}`;
       riskRating = "CRITICAL";
       fairnessScore = 3;
       summary = "This restricts your ability to work, consult, or start a competing business within a geographic region and timeframe.";
-      whatItMeans = "You agree not to engage in competing business activities. Note that the FTC issued a non-compete ban rule (currently subject to federal court review), and states like California, Minnesota, and Oklahoma declare non-competes void.";
+      whatItMeans = "You agree not to engage in competing business activities. There is no federal non-compete ban in effect — a court vacated the FTC's 2024 rule, and it was formally removed from federal regulations in early 2026 — so enforceability depends entirely on the state named in the agreement. States like California, Minnesota, North Dakota, and Oklahoma void nearly all non-competes; others enforce them if the scope is reasonable.";
       hiddenRisks.push("May prevent you from earning a living in your core specialty for 12-24 months");
       hiddenRisks.push("Geographic scope may be unreasonably broad (e.g., 'worldwide')");
-      hiddenRisks.push("State laws differ dramatically (void in CA, heavily scrutinized in NY and TX)");
+      hiddenRisks.push("State laws differ dramatically and keep changing — check the current rule in your state before signing or enforcing one");
     } else {
       hiddenRisks.push("Ambiguous definitions could be interpreted broadly in court");
       hiddenRisks.push("Lacks a clear dispute resolution or cure period notice");
@@ -222,12 +222,12 @@ CRITICAL MANDATES:
 
 *Disclaimer: Educational resource only. Not formal legal representation.*`;
     } else if (query.includes("boi") || query.includes("fincen") || query.includes("transparency")) {
-      reply = `**Direct Answer:** Under the Corporate Transparency Act (CTA), most small domestic corporations and LLCs formed in the United States must file a Beneficial Ownership Information (BOI) report with the Financial Crimes Enforcement Network (FinCEN). Existing reporting companies formed before Jan 1, 2024 had until Jan 1, 2025 to file, while entities created in 2024 have 90 days from registration notice, and those formed in 2025+ have 30 days.
+      reply = `**Direct Answer:** As of August 2026, U.S.-formed corporations and LLCs are permanently exempt from Beneficial Ownership Information (BOI) reporting. FinCEN's final rule removed the requirement for all domestic companies and U.S. persons — only foreign entities registered to do business in the U.S. still have to file.
 
-### What Must Be Reported:
-- Full legal name, date of birth, and residential address of every 25%+ owner or substantial control individual.
-- A scanned copy of an acceptable ID (U.S. Passport or State Driver's License).
-- Official filing portal: FinCEN.gov/boi (No government filing fee required).
+### What This Means:
+- If your company was formed under U.S. state law, you have no BOI filing obligation — nothing to submit, no deadline to track.
+- If your company was formed abroad and registered to do business in a U.S. state, you likely still must file: 30 calendar days from your registration effective notice.
+- Official source: FinCEN.gov/boi — this exemption has changed twice already, so it's worth a periodic check.
 
 *Disclaimer: Not formal legal advice.*`;
     } else {
@@ -276,6 +276,15 @@ app.post("/api/som-audit", async (req, res) => {
       "Ensure .gov citations link directly to FTC.gov or California Department of Justice.",
     ],
   });
+});
+
+// Explicit SEO endpoints for robots.txt and sitemap.xml
+app.get("/robots.txt", (req, res) => {
+  res.type("text/plain").send("User-agent: *\nAllow: /\nSitemap: https://complywiki.com/sitemap.xml\n");
+});
+
+app.get("/sitemap.xml", (req, res) => {
+  res.type("application/xml").sendFile(path.join(process.cwd(), "public", "sitemap.xml"));
 });
 
 // Vite middleware for development vs static build in production

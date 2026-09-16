@@ -86,11 +86,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenLegalModal }) 
                   City Hall & Licensing Office Maps (Local SEO)
                 </button>
               </li>
-              <li>
-                <button onClick={() => onNavigate('architecture')} className="hover:text-amber-300 transition-colors">
-                  Next.js pSEO Architecture & Schema Engine
-                </button>
-              </li>
             </ul>
           </div>
 
@@ -191,12 +186,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenLegalModal }) 
               className="hover:text-amber-300 hover:underline transition-colors"
             >
               Cookie Policy & CPRA
-            </button>
-            <button
-              onClick={() => onNavigate('architecture')}
-              className="text-amber-400/90 hover:underline font-mono"
-            >
-              Next.js pSEO Architecture
             </button>
           </div>
         </div>

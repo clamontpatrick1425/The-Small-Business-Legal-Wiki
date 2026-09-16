@@ -14,13 +14,18 @@ import {
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { DOCUMENT_TEMPLATES, ALL_STATES } from '../data/legalData';
+import { LegalStateInfo } from '../types';
 import { AdSenseUnit } from '../components/AdSenseUnit';
 import { SchemaMarkup } from '../components/SchemaMarkup';
 import { useSeoMeta } from '../hooks/useSeoMeta';
 
-export const DocumentGeneratorView: React.FC = () => {
+interface DocumentGeneratorViewProps {
+  initialState?: LegalStateInfo;
+}
+
+export const DocumentGeneratorView: React.FC<DocumentGeneratorViewProps> = ({ initialState }) => {
   const [selectedTemplateId, setSelectedTemplateId] = useState(DOCUMENT_TEMPLATES[0].id);
-  const [selectedStateCode, setSelectedStateCode] = useState('CA');
+  const [selectedStateCode, setSelectedStateCode] = useState(initialState ? initialState.code : 'CA');
   const [step, setStep] = useState<1 | 2 | 3>(1); // 1: Form, 2: Interstitial Ad, 3: Generated Doc
   const [copied, setCopied] = useState(false);
 

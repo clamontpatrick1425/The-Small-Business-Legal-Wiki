@@ -256,21 +256,21 @@ export const AdSenseUnit: React.FC<AdSenseUnitProps> = ({
           >
             <div className="flex items-center gap-3 mb-3">
               <div className="w-10 h-10 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-lg">
-                BOI
+                RA
               </div>
               <div>
                 <h3 className="font-bold text-slate-100 group-hover:text-amber-300 text-base">
-                  FinCEN BOI Direct Filing Portal (2026 Mandate)
+                  Registered Agent & Annual Report Monitoring
                 </h3>
-                <p className="text-xs text-slate-400">Federal Corporate Transparency Act Filing Service</p>
+                <p className="text-xs text-slate-400">Never miss a state filing deadline again</p>
               </div>
             </div>
             <p className="text-sm text-slate-300 leading-relaxed mb-4">
-              Avoid the $591/day civil non-compliance penalty. Submit your Beneficial Ownership Information (BOI) report in under 5 minutes with automated FinCEN validation and certified confirmation ID.
+              Avoid late fees and administrative dissolution. Get automated reminders and one-click filing for your state's annual report, registered agent renewal, and franchise tax deadlines.
             </p>
             <div className="flex items-center justify-between pt-2 border-t border-slate-900 text-xs text-amber-400 font-semibold">
-              <span>Instant Confirmation Record</span>
-              <span className="group-hover:translate-x-1 transition-transform">File Report Now →</span>
+              <span>Automated Compliance Alerts</span>
+              <span className="group-hover:translate-x-1 transition-transform">Protect Your Entity →</span>
             </div>
           </div>
 

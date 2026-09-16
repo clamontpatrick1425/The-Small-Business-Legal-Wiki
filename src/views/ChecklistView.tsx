@@ -59,27 +59,15 @@ const AUDIT_QUESTIONS: Question[] = [
   {
     id: 'boi-filing',
     category: 'Federal Corporate Transparency Act',
-    question: 'Has your company filed its Beneficial Ownership Information (BOI) Report with FinCEN?',
-    description: 'The federal Corporate Transparency Act (CTA) mandates that all corporations and LLCs formed in the United States disclose their beneficial owners to the Financial Crimes Enforcement Network (FinCEN).',
+    question: 'Is your company a U.S.-formed entity, or a foreign entity registered to do business here?',
+    description: 'FinCEN permanently exempted all U.S.-formed corporations and LLCs from Beneficial Ownership Information (BOI) reporting in August 2026. Only foreign entities registered to do business in a U.S. state remain subject to the Corporate Transparency Act.',
     options: [
-      {
-        label: 'Yes, BOI report submitted to FinCEN and confirmation ID received.',
-        points: 10,
-        riskLevel: 'LOW',
-        feedback: 'Compliant with 31 U.S.C. § 5336. Remember to file an updated report within 30 days of any change in beneficial owners or addresses.',
-      },
-      {
-        label: 'We are working on it or unsure if our business is exempt.',
-        points: 4,
-        riskLevel: 'MODERATE',
-        feedback: 'Take immediate action: Unless you meet one of the 23 specific exemptions (such as large operating companies with 20+ employees and $5M revenue), you must report.',
-      },
-      {
-        label: 'No, we have not filed our BOI report.',
-        points: 0,
-        riskLevel: 'CRITICAL',
-        feedback: 'Critical Federal Liability: Willful failure to report can result in civil fines up to $591/day and potential criminal sanctions.',
-      },
+      { label: 'We were formed in the U.S. — no BOI filing applies to us.', points: 10, riskLevel: 'LOW',
+        feedback: 'Correct — U.S.-formed companies have no BOI obligation under the current final rule. Worth a periodic check at FinCEN.gov/boi in case the exemption is narrowed again.' },
+      { label: "We're a foreign entity registered to do business in the U.S. and unsure of our filing status.", points: 4, riskLevel: 'MODERATE',
+        feedback: 'You likely still must file: 30 calendar days from your registration effective notice.' },
+      { label: 'Not sure whether we count as domestic or foreign for this purpose.', points: 2, riskLevel: 'MODERATE',
+        feedback: '"Domestic" means formed under U.S. state law; "foreign" means formed abroad and merely registered to do business here.' },
     ],
   },
   {
@@ -234,8 +222,8 @@ export const ChecklistView: React.FC = () => {
               text: 'Ensure written contractor agreements exist with explicit IP Work-Made-For-Hire assignments and IRS 20-factor compliance.',
             },
             {
-              name: 'Check Corporate Transparency Act (FinCEN BOI) Filings',
-              text: 'Confirm that beneficial ownership information has been reported to the US Department of the Treasury.',
+              name: 'Confirm Corporate Transparency Act (FinCEN BOI) Status',
+              text: 'Confirm whether your entity is domestic (exempt from BOI reporting as of August 2026) or a foreign entity registered to do business in the U.S. (still required to file).',
             },
             {
               name: 'Review Municipal Business Licensing & Assumed Names',
@@ -416,9 +404,9 @@ export const ChecklistView: React.FC = () => {
                   2
                 </span>
                 <div className="space-y-1">
-                  <div className="font-bold text-sm text-slate-200">File FinCEN Beneficial Ownership Report</div>
+                  <div className="font-bold text-sm text-slate-200">Confirm Your FinCEN BOI Status</div>
                   <p className="text-xs text-slate-400">
-                    Submit beneficial owner details directly at FinCEN.gov/boi to avoid daily civil non-compliance penalties.
+                    U.S.-formed companies no longer need to file. If you're a foreign entity registered to do business in the U.S., confirm your filing deadline at FinCEN.gov/boi.
                   </p>
                 </div>
               </div>

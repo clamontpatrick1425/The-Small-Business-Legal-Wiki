@@ -181,16 +181,21 @@ export const LEGAL_CLAUSES: LegalClause[] = [
     sampleClauseText: 'During the term of this Agreement and for a period of twelve (12) months following termination, Contractor agrees not to directly or indirectly engage in, own, manage, or perform services for any enterprise that directly competes with the specific core offerings of the Company within the defined Geographic Territory.',
     commonGotchas: [
       'California voidness: California Business and Professions Code § 16600 renders nearly all employee and independent contractor non-competes void and unenforceable.',
-      'FTC Non-Compete Rule: The FTC issued a comprehensive rule prohibiting employer non-competes (subject to ongoing federal litigation appeals).',
+      "No federal ban is in effect: The FTC's 2024 rule banning employer non-competes was vacated by a federal court, the FTC dropped its appeals in September 2025, and the rule was formally struck from the Code of Federal Regulations in February 2026. Enforceability now depends entirely on state law.",
+      'State law is the real risk: States are moving in opposite directions — some (CA, MN, ND, OK) void most non-competes outright, others restrict them by wage threshold, and new state limits keep arriving. Check the current rule in every state where you have workers.',
       'Overbroad territory: Terms stating "anywhere the Company operates or plans to operate" are routinely struck down.',
     ],
-    negotiationTips: 'Strike the non-compete entirely and replace it with a strong Non-Disclosure (NDA) and Non-Solicitation of clients clause, which courts enforce much more reliably.',
+    negotiationTips: 'Strike the non-compete entirely and replace it with a strong Non-Disclosure (NDA) and Non-Solicitation of clients clause, which courts enforce far more reliably regardless of which state\'s law applies.',
     officialGovSource: {
       agency: 'Federal Trade Commission (FTC)',
       url: 'https://www.ftc.gov/legal-library/browse/rules/noncompete-rule',
-      statute: '16 CFR Part 910 (Non-Compete Clause Final Rule)',
+      statute: '16 CFR Part 910 — vacated by federal courts and formally removed from the CFR, Feb. 2026. The FTC still pursues case-by-case Section 5 enforcement against specific unfair non-competes.',
     },
     faqs: [
+      {
+        question: 'Is the federal non-compete ban still in effect?',
+        answer: "No. A federal court vacated the FTC's rule in 2024, the FTC abandoned its appeals in September 2025, and the rule was formally removed from federal regulations in February 2026. Non-competes are governed entirely by state law today.",
+      },
       {
         question: 'Are non-compete agreements legal for 1099 independent contractors?',
         answer: 'Courts view non-competes on 1099 contractors with extreme skepticism because true independent contractors are legally expected to market their skills to the general public.',
@@ -730,12 +735,12 @@ export const COMPLIANCE_QUIZ_QUESTIONS: ComplianceQuizQuestion[] = [
   {
     id: 3,
     category: 'Federal FinCEN Compliance',
-    question: 'Has your company filed its Beneficial Ownership Information (BOI) report with the Financial Crimes Enforcement Network (FinCEN)?',
-    explanation: 'Under the Corporate Transparency Act (CTA), domestic reporting companies must report 25%+ owners and key controllers to FinCEN or face civil penalties of up to $591/day and criminal fines.',
+    question: 'Is your company a U.S.-formed entity, or a foreign entity registered to do business in the U.S.?',
+    explanation: 'FinCEN permanently exempted every U.S.-formed company and U.S. person from Beneficial Ownership Information (BOI) reporting in August 2026. Only foreign entities registered to do business in a U.S. state still have to report.',
     options: [
-      { text: 'No, we were unaware of this federal requirement', points: 5, risk: 'danger', recommendation: 'File your BOI report immediately at FinCEN.gov/boi (there is no government filing fee).' },
-      { text: 'Yes, filed and verified with our FinCEN ID confirmations on record', points: 0, risk: 'good', recommendation: 'Remember you must file an updated report within 30 days if any owner moves or renews their driver\'s license/passport.' },
-      { text: 'We qualify for one of the 23 statutory exemptions (e.g., bank, 501c3, large operating company >20 employees & >$5M revenue)', points: 0, risk: 'good', recommendation: 'Document your specific exemption rationale in your corporate records.' },
+      { text: 'We were formed in the U.S. (LLC, corporation, etc.)', points: 0, risk: 'good', recommendation: 'No BOI filing is required. Check FinCEN.gov/boi periodically in case this exemption is narrowed again.' },
+      { text: 'We are a foreign entity registered to do business in a U.S. state', points: 4, risk: 'warning', recommendation: 'You likely still must file: 30 calendar days from your registration effective notice (or by April 25, 2025 if you registered before March 26, 2025).' },
+      { text: 'Not sure whether we count as domestic or foreign for this purpose', points: 2, risk: 'warning', recommendation: '"Domestic" means formed under U.S. state law; "foreign" means formed abroad and merely registered to do business here.' },
     ],
   },
   {
@@ -765,9 +770,9 @@ export const RECENT_LEGAL_ALERTS = [
   {
     id: 1,
     agency: 'FinCEN / Dept of Treasury',
-    date: 'Updated September 2026',
-    title: 'Beneficial Ownership Information (BOI) Strict Enforcement Window',
-    summary: 'FinCEN confirms nationwide compliance reviews for small reporting companies under the Corporate Transparency Act. Businesses formed in 2025+ must report within 30 calendar days.',
+    date: 'August 2026',
+    title: 'BOI Reporting Permanently Eliminated for U.S. Companies',
+    summary: "FinCEN's August 2026 final rule permanently exempts every U.S.-formed company and U.S. person from Beneficial Ownership Information reporting. Only foreign entities registered to do business in the U.S. remain in scope.",
     impact: 'High',
     sourceUrl: 'https://www.fincen.gov/boi',
   },

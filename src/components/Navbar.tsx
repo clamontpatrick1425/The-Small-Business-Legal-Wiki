@@ -6,12 +6,11 @@ import {
   CheckSquare, 
   Languages, 
   MapPin, 
-  Layers, 
   Sparkles, 
   PhoneCall, 
   Menu, 
-  X,
-  DollarSign
+  X, 
+  DollarSign 
 } from 'lucide-react';
 import { ViewType } from '../types';
 import { useAdMetrics } from './AdSenseUnit';
@@ -40,7 +39,6 @@ export const Navbar: React.FC<NavbarProps> = ({
     { id: 'checklists' as ViewType, label: 'Compliance Quiz', icon: CheckSquare },
     { id: 'translator' as ViewType, label: 'Legalese Translator', icon: Languages },
     { id: 'local-hubs' as ViewType, label: 'Local Maps & Hubs', icon: MapPin },
-    { id: 'architecture' as ViewType, label: 'pSEO & Schema Engine', icon: Layers },
   ];
 
   return (
@@ -52,9 +50,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             <div className="flex items-center gap-2">
               <span className="bg-amber-500/20 text-amber-300 font-bold px-1.5 py-0.5 rounded text-[10px] tracking-wider uppercase">
                 100% Free Public Resource
-              </span>
-              <span className="hidden md:inline text-slate-400">
-                Zero paywalls • Funded by Google AdSense • Updated for 2026 Federal & State Compliance
               </span>
             </div>
             

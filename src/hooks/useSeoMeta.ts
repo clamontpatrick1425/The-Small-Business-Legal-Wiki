@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { ViewType } from '../types';
+import { viewForPath } from '../routes';
 
 export interface SeoMetaOptions {
   title?: string;
@@ -77,16 +79,18 @@ function setLinkTag(rel: string, href: string) {
 /**
  * Hook to dynamically update document title and meta tags based on navigation or custom input
  */
-export function useSeoMeta(options: SeoMetaOptions = {}, currentView?: ViewType) {
+export function useSeoMeta(options: SeoMetaOptions = {}, currentViewOverride?: ViewType) {
+  const location = useLocation();
+
   useEffect(() => {
     if (typeof document === 'undefined') return;
 
-    // Determine target title and description
-    const preset = currentView ? VIEW_SEO_PRESETS[currentView] : null;
-    const finalTitle = options.title || preset?.title || VIEW_SEO_PRESETS.home.title;
-    const finalDescription = options.description || preset?.description || VIEW_SEO_PRESETS.home.description;
+    const currentView = currentViewOverride || viewForPath(location.pathname);
+    const preset = VIEW_SEO_PRESETS[currentView] || VIEW_SEO_PRESETS.home;
+    const finalTitle = options.title || preset.title;
+    const finalDescription = options.description || preset.description;
     const origin = typeof window !== 'undefined' ? window.location.origin : 'https://complywiki.com';
-    const finalUrl = options.canonicalUrl || (typeof window !== 'undefined' ? window.location.href : origin);
+    const canonicalUrl = options.canonicalUrl || `${origin}${location.pathname}`;
     const finalOgType = options.ogType || (currentView === 'clauses' || currentView === 'clause-detail' ? 'article' : 'website');
 
     // 1. Update document title
@@ -98,7 +102,7 @@ export function useSeoMeta(options: SeoMetaOptions = {}, currentView?: ViewType)
     // 3. Update OpenGraph tags
     setMetaTag('meta[property="og:title"]', 'property', 'og:title', finalTitle);
     setMetaTag('meta[property="og:description"]', 'property', 'og:description', finalDescription);
-    setMetaTag('meta[property="og:url"]', 'property', 'og:url', finalUrl);
+    setMetaTag('meta[property="og:url"]', 'property', 'og:url', canonicalUrl);
     setMetaTag('meta[property="og:type"]', 'property', 'og:type', finalOgType);
     setMetaTag('meta[property="og:site_name"]', 'property', 'og:site_name', 'The Small Business Legal Wiki');
 
@@ -108,18 +112,20 @@ export function useSeoMeta(options: SeoMetaOptions = {}, currentView?: ViewType)
     setMetaTag('meta[name="twitter:description"]', 'name', 'twitter:description', finalDescription);
 
     // 5. Update Canonical Link
-    setLinkTag('canonical', finalUrl);
+    setLinkTag('canonical', canonicalUrl);
 
     // 6. Keywords if provided
     if (options.keywords && options.keywords.length > 0) {
       setMetaTag('meta[name="keywords"]', 'name', 'keywords', options.keywords.join(', '));
     }
   }, [
+    location.pathname,
     options.title,
     options.description,
     options.canonicalUrl,
     options.ogType,
     options.keywords,
-    currentView,
+    currentViewOverride,
   ]);
 }
+
